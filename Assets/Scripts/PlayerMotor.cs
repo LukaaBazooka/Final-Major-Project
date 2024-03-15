@@ -122,7 +122,6 @@ public class PlayerMotor : MonoBehaviour
             Playervelocity.y = -2f;
 
         controller.Move(Playervelocity * Time.deltaTime);
-        Debug.Log(Playervelocity.y);
 
     }
     
