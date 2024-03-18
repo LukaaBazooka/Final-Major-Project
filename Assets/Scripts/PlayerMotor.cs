@@ -9,8 +9,8 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController controller;
     private Vector3 Playervelocity;
     private bool IsGrounded;
-    public float speed = 5f;
-    public float gravity = -18.8f;
+    public float speed = 2f;
+    public float gravity = -68.8f;
     public float JumpHeight = 1f;
     private bool lerpcrouch = false;
     public bool crouching = false;
@@ -32,12 +32,12 @@ public class PlayerMotor : MonoBehaviour
             if (energy > 50)
             {
                 sprinting = true;
-                speed = 8;
+                speed = 4;
             }
             if (energy <= 0)
             {
                 sprinting = false;
-                speed = 5;
+                speed = 2;
             }
 
 
@@ -46,7 +46,7 @@ public class PlayerMotor : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftShift) && !crouching && !lerpcrouch)
         {
             sprinting = false;
-            speed = 5;
+            speed = 2;
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && !crouching && !lerpcrouch)
@@ -58,7 +58,7 @@ public class PlayerMotor : MonoBehaviour
             if (energy <= 0 && sprinting)
             {
                 sprinting = false;
-                speed = 5;
+                speed = 2;
                 energy = 0;
             }
 

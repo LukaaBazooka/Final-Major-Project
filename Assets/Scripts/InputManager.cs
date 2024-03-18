@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour
 
        
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (IsInventoryOpeened)
             {
