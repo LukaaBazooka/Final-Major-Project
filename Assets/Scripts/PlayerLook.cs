@@ -32,8 +32,8 @@ public class PlayerLook : MonoBehaviour
 
     private Animator anim;
 
-    public float xSensitivity = 30f;
-    public float ySensitivity = 30f;
+    public float xSensitivity = 15f;
+    public float ySensitivity = 15f;
 
 
     private bool scancooldown;
