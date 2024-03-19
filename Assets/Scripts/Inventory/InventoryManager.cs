@@ -46,6 +46,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     void Update()
     {
+        HotBarItemChange();
         CheckForHotbarInput();
         inventoryParent.SetActive(IsInventoryOpeened);
 

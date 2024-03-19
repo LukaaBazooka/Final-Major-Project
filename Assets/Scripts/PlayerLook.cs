@@ -12,6 +12,8 @@ public class PlayerLook : MonoBehaviour
 
     [SerializeField] GameObject KeyCard;
 
+
+
     [SerializeField] AudioClip AcceptCard;
     [SerializeField] AudioClip DeclineCard;
     [SerializeField] AudioClip Decline;
@@ -33,6 +35,10 @@ public class PlayerLook : MonoBehaviour
     public float xSensitivity = 30f;
     public float ySensitivity = 30f;
 
+
+    private bool scancooldown;
+
+                                         
     public void ProcessLook(Vector2 input)
     {
         float mouseX = input.x;
@@ -46,82 +52,6 @@ public class PlayerLook : MonoBehaviour
         transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
     }
 
-    public IEnumerator Colorswitch(GameObject Object, bool accepted)
-    {
-        
-
-        if (accepted)
-        {
-            Object.transform.GetChild(3).gameObject.SetActive(true);
-            Object.transform.GetChild(1).gameObject.SetActive(false);
-            Object.transform.GetChild(2).gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
-            Object.transform.GetChild(3).gameObject.SetActive(false);
-            Object.transform.GetChild(1).gameObject.SetActive(true);
-            Object.transform.GetChild(2).gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
-            Object.transform.GetChild(3).gameObject.SetActive(true);
-            Object.transform.GetChild(1).gameObject.SetActive(false);
-            Object.transform.GetChild(2).gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
-            Object.transform.GetChild(3).gameObject.SetActive(false);
-            Object.transform.GetChild(1).gameObject.SetActive(true);
-            Object.transform.GetChild(2).gameObject.SetActive(false);
-        }
-        else
-        {
-            Object.transform.GetChild(3).gameObject.SetActive(false);
-            Object.transform.GetChild(1).gameObject.SetActive(false);
-            Object.transform.GetChild(2).gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
-            Object.transform.GetChild(3).gameObject.SetActive(false);
-            Object.transform.GetChild(1).gameObject.SetActive(true);
-            Object.transform.GetChild(2).gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
-            Object.transform.GetChild(3).gameObject.SetActive(false);
-            Object.transform.GetChild(1).gameObject.SetActive(false);
-            Object.transform.GetChild(2).gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
-            Object.transform.GetChild(3).gameObject.SetActive(false);
-            Object.transform.GetChild(1).gameObject.SetActive(true);
-            Object.transform.GetChild(2).gameObject.SetActive(false);
-        }
-        yield break;
-
-
-    }
-    public IEnumerator Animthingy(GameObject Object)
-    {
-
-        yield return new WaitForSeconds(1.5f);
-
-        AudioSource.PlayClipAtPoint(DoorOpen, Object.transform.parent.gameObject.transform.position, 2f);
-
-        anim.SetBool("IsOpen", true);
-        anim.SetBool("Activated", true);
-        AudioSource.PlayClipAtPoint(DoorClose, Object.transform.parent.gameObject.transform.position, 2f);
-
-        anim.Play("DoorOpen");
-        anim.SetBool("Activated", false);
-        yield return new WaitForSeconds(3f);
-
-        AudioSource.PlayClipAtPoint(DoorOpen2, Object.transform.parent.gameObject.transform.position, 2f);
-
-        yield return new WaitForSeconds(3f);
-        AudioSource.PlayClipAtPoint(DoorClose, Object.transform.parent.gameObject.transform.position, 2f);
-
-        yield return new WaitForSeconds(1.5f);
-
-        AudioSource.PlayClipAtPoint(DoorClose2, Object.transform.parent.gameObject.transform.position, 2f);
-        
-        yield return new WaitForSeconds(1f);
-        Debug.Log("closing");
-        anim.Play("DoorClose");
-        AudioSource.PlayClipAtPoint(DoorOpen, Object.transform.parent.gameObject.transform.position, 2f);
-        yield break;
-
-
-    }
 
     void Update()
     {
@@ -145,24 +75,38 @@ public class PlayerLook : MonoBehaviour
                 }
                 else if (Object.tag == "CardReader")
                 {
-                
-                    if (KeyCard.activeSelf == true)
+
+                    CardReader cardreader = Object.GetComponent<CardReader>();
+
+                    if (KeyCard.activeSelf == true && !cardreader.scancooldown)
                     {
-                        Debug.Log("oh nice one.");
+                        //Debug.Log("oh nice one.");
+                        cardreader.scancooldown = true;
+
+                        StartCoroutine(cardreader.coooldown(10f));
                         AudioSource.PlayClipAtPoint(AcceptCard, Object.transform.position, 2f);
 
 
-                        StartCoroutine(Colorswitch(Object,true));
+                        StartCoroutine(cardreader.Colorswitch(Object,true));
 
 
                         anim = Object.transform.parent.gameObject.GetComponent<Animator>();
-                        StartCoroutine(Animthingy(Object));
+
+                        if (Object.transform.parent.gameObject.GetComponent<DoorThng>())
+                        {
+                            DoorThng door = Object.transform.parent.gameObject.GetComponent<DoorThng>();
+                            StartCoroutine(door.Animthingy());
+                        }
                       
                     }
-                    else
+                    else if (!KeyCard.activeSelf && !cardreader.scancooldown || !cardreader.scancooldown) 
                     {
+                        cardreader.scancooldown = true;
+
+                        StartCoroutine(cardreader.coooldown(2f));
+
                         AudioSource.PlayClipAtPoint(DeclineCard, Object.transform.position, 2f);
-                        StartCoroutine(Colorswitch(Object, false));
+                        StartCoroutine(cardreader.Colorswitch(Object, false));
 
                     }
                 }
@@ -179,7 +123,7 @@ public class PlayerLook : MonoBehaviour
         Ray ray2 = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitinfo2;
 
-        if (Physics.Raycast(ray2, out hitinfo2, 2f))
+        if (Physics.Raycast(ray2, out hitinfo2, 1.5f))
         {
             ItemPickable item = hitinfo2.collider.gameObject.GetComponent<ItemPickable>();
 
