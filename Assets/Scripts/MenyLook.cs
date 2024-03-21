@@ -55,12 +55,12 @@ public class MenyLook : MonoBehaviour
         sensitivity *= sensitivityDecayRate;
 
         // Smooth near bounds
-        rotationX = SmoothNearBounds(rotationX, -10f, 10f);
-        rotationY = SmoothNearBounds(rotationY, -10f, 10f);
+        rotationX = SmoothNearBounds(rotationX, -5f, 5f);
+        rotationY = SmoothNearBounds(rotationY, -5f, 5f);
 
         // Clamp to prevent further rotation
-        rotationX = Mathf.Clamp(rotationX, -20f, 20f);
-        rotationY = Mathf.Clamp(rotationY, -20f, 20f);
+        rotationX = Mathf.Clamp(rotationX, -10f, 10f);
+        rotationY = Mathf.Clamp(rotationY, -10f, 10f);
 
         // Update rotation
         transform.localEulerAngles = new Vector3(rotationX, rotationY, 0);

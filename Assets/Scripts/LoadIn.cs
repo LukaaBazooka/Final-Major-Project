@@ -19,6 +19,8 @@ public class LoadIn : MonoBehaviour
 
     public GameObject MyCanvas;
 
+    public GameObject Play;
+    public GameObject Settings;
 
     public GameObject Scene;
     public AudioSource audiothing;
@@ -58,9 +60,17 @@ public class LoadIn : MonoBehaviour
 
         LeanTween.rotate(cog, new Vector3(0, 0, 180), 2f).setEaseInOutBack();
 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
+
+        LeanTween.moveLocal(Play, new Vector3(-244.4f,-10, 0),2f).setEaseInOutQuad();
+        yield return new WaitForSeconds(.2f);
+        LeanTween.moveLocal(Settings, new Vector3(-244.4f, -96, 0), 2f).setEaseInOutQuad();
+
 
         MyCanvas.SetActive(false);
+
+
+
 
     }
 }
