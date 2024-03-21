@@ -15,8 +15,14 @@ public class LoadIn : MonoBehaviour
     public RawImage Glow;
     public RawImage Text;
 
+    public GameObject cog;
+
+    public GameObject MyCanvas;
+
+
     public GameObject Scene;
     public AudioSource audiothing;
+    public AudioSource CogSpin;
 
     void Start()
     {
@@ -45,8 +51,16 @@ public class LoadIn : MonoBehaviour
         LeanTween.alpha(Panel.rectTransform, 0f, 1f).setEaseInOutQuad();
 
 
+        yield return new WaitForSeconds(.5f);
 
+        CogSpin.Play();
+    
 
+        LeanTween.rotate(cog, new Vector3(0, 0, 180), 2f).setEaseInOutBack();
+
+        yield return new WaitForSeconds(.5f);
+
+        MyCanvas.SetActive(false);
 
     }
 }
