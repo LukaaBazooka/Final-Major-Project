@@ -41,7 +41,7 @@ public class MenyLook : MonoBehaviour
         if (mouseX != 0 || mouseY != 0)
         {
             // Reset sensitivity
-            sensitivity = Vector2.one * 360f;
+            sensitivity = Vector2.one * 100;
         }
 
         // Apply sensitivity and damping
