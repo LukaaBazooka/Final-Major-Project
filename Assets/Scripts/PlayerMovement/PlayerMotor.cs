@@ -15,7 +15,7 @@ public class PlayerMotor : MonoBehaviour
     private bool lerpcrouch = false;
     public bool crouching = false;
     private float crouchTimer;
-    public bool sprinting;
+    public bool sprinting = false;
 
 
     public float energy = 100f;
@@ -52,7 +52,7 @@ public class PlayerMotor : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && !crouching && !lerpcrouch)
         {
             if (energy > 0 && sprinting)
-                energy -= 0.04f;
+                energy -= 0.25f;
           
 
             if (energy <= 0 && sprinting)
@@ -68,9 +68,9 @@ public class PlayerMotor : MonoBehaviour
             if (energy < 100)
             {
                 if (crouching)
-                    energy += 0.03f;
+                    energy += 0.2f;
                 else
-                    energy += 0.01f;
+                    energy += 0.1f;
 
             }
 
@@ -127,8 +127,11 @@ public class PlayerMotor : MonoBehaviour
     
     public void Jump()
     {
+        Debug.Log("jumped");
+
         if (IsGrounded)
         {
+            Debug.Log("jump");
             Playervelocity.y = Mathf.Sqrt(JumpHeight * -3.0f * gravity);
         }
     }
