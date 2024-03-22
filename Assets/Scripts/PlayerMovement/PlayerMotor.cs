@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMotor : MonoBehaviour
 {
@@ -17,19 +18,42 @@ public class PlayerMotor : MonoBehaviour
     private float crouchTimer;
     public bool sprinting = false;
 
+    public AudioSource OutOfBreath;
+
+
+    public Image StamBar;
 
     public float energy = 100f;
+    private bool lerping;
+
+    private bool cantsee;
+
+    private bool outbreathe;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
     }
 
+
+
+    IEnumerator breathe()
+    {
+        if (!outbreathe)
+        {
+            outbreathe = true;
+            OutOfBreath.Play();
+            yield return new WaitForSeconds(3f);
+            outbreathe = false;
+        }
+    }
+
+
     public void Sprint()
     {
         if (Input.GetKeyDown(KeyCode.LeftShift) && !crouching && !lerpcrouch)
         {
-            if (energy > 50)
+            if (energy > 90)
             {
                 sprinting = true;
                 speed = 4.5f;
@@ -52,7 +76,7 @@ public class PlayerMotor : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && !crouching && !lerpcrouch)
         {
             if (energy > 0 && sprinting)
-                energy -= 0.25f;
+                energy -= 0.1f;
           
 
             if (energy <= 0 && sprinting)
@@ -81,8 +105,72 @@ public class PlayerMotor : MonoBehaviour
 
         }
     }
+
+
+    IEnumerator FadeImage(float from, float to)
+    {
+        if (!lerping )
+        {
+            lerping= true;
+
+            if (to == 1 && cantsee)
+            {
+                cantsee = false;
+                // Use LeanTween to tween the alpha value
+                LeanTween.value(gameObject, from, to, 0.1f)
+                    .setEase(LeanTweenType.easeInOutQuad) // Specify easing type
+                    .setOnUpdate((float alpha) =>
+                    {
+                        // Update the UI Image color with the new alpha value
+                        Color newColor = StamBar.color;
+                        newColor.a = alpha;
+                        StamBar.color = newColor;
+                    });
+                yield return new WaitForSeconds(.1f);
+
+            }
+            else if(to == 0 && !cantsee)
+            {
+                cantsee = true;
+                LeanTween.value(gameObject, from, to, 2f)
+                 .setEase(LeanTweenType.easeInOutQuad) // Specify easing type
+                 .setOnUpdate((float alpha) =>
+                 {
+                     // Update the UI Image color with the new alpha value
+                     Color newColor = StamBar.color;
+                     newColor.a = alpha;
+                     StamBar.color = newColor;
+                 });
+                yield return new WaitForSeconds(2f);
+
+            }
+
+            lerping = false;
+
+        }
+
+    }
+
     void Update()
     {
+        if (energy >= 100)
+        {
+            StartCoroutine(FadeImage(1, 0));
+        }
+        else
+        {
+            StartCoroutine(FadeImage(0, 1));
+
+        }
+
+        if (energy <10)
+        {
+            StartCoroutine(breathe());
+        }
+        Debug.Log(cantsee);
+
+        StamBar.fillAmount = Mathf.Lerp(StamBar.fillAmount, energy / 100, 0.2f);
+
         IsGrounded = controller.isGrounded;
         if (lerpcrouch)
         {
