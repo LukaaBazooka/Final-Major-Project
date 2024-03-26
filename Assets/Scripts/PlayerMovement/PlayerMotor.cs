@@ -20,6 +20,8 @@ public class PlayerMotor : MonoBehaviour
 
     public AudioSource OutOfBreath;
 
+    public AudioClip JumpSound;
+    public AudioClip LandSound;
 
     public Image StamBar;
 
@@ -35,6 +37,7 @@ public class PlayerMotor : MonoBehaviour
         controller = GetComponent<CharacterController>();
     }
 
+    bool inAir;
 
 
     IEnumerator breathe()
@@ -76,7 +79,7 @@ public class PlayerMotor : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && !crouching && !lerpcrouch)
         {
             if (energy > 0 && sprinting)
-                energy -= 0.1f;
+                energy -= 0.045f;
           
 
             if (energy <= 0 && sprinting)
@@ -153,6 +156,9 @@ public class PlayerMotor : MonoBehaviour
 
     void Update()
     {
+        StamBar.fillAmount = Mathf.Lerp(StamBar.fillAmount, energy / 100, 0.2f);
+
+
         if (energy >= 100)
         {
             StartCoroutine(FadeImage(1, 0));
@@ -167,9 +173,7 @@ public class PlayerMotor : MonoBehaviour
         {
             StartCoroutine(breathe());
         }
-        Debug.Log(cantsee);
 
-        StamBar.fillAmount = Mathf.Lerp(StamBar.fillAmount, energy / 100, 0.2f);
 
         IsGrounded = controller.isGrounded;
         if (lerpcrouch)
@@ -212,15 +216,34 @@ public class PlayerMotor : MonoBehaviour
         controller.Move(Playervelocity * Time.deltaTime);
 
     }
-    
+    IEnumerator AirThing()
+    {
+        yield return new WaitForSeconds(0.5f);
+        while (!IsGrounded)
+        {
+
+            yield return null;
+        }
+        if (inAir) 
+        {
+            inAir = false;
+            AudioSource.PlayClipAtPoint(LandSound, OutOfBreath.transform.position, 0.2f);
+
+        }
+    }
+
+
     public void Jump()
     {
-        Debug.Log("jumped");
 
         if (IsGrounded)
         {
-            Debug.Log("jump");
+            
             Playervelocity.y = Mathf.Sqrt(JumpHeight * -3.0f * gravity);
+            AudioSource.PlayClipAtPoint(JumpSound, OutOfBreath.transform.position, 1f);
+            inAir = true;
+            StartCoroutine(AirThing());
+
         }
     }
 

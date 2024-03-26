@@ -16,10 +16,11 @@ public class InputManager : MonoBehaviour
     [SerializeField] GameObject inventoryParent;
 
 
+
     bool IsInventoryOpeened;
     void Update()
     {
-
+            
        
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -35,6 +36,8 @@ public class InputManager : MonoBehaviour
 
             }
         }
+   
+
     }
 
 

@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 
 [RequireComponent(typeof(PositionFollower))]
@@ -19,7 +21,11 @@ public class ViewBobbing : MonoBehaviour
 
     public GameObject player;
 
-    public AudioSource Footstep;
+    
+
+    public AudioSource MetalSteps;
+    public AudioSource ConcreteSteps;
+
 
     private PositionFollower FollowerInstance;
     private Vector3 OriginsOffset;
@@ -40,6 +46,7 @@ public class ViewBobbing : MonoBehaviour
         }
     }
 
+    private string Material;
 
     void Start()
     {
@@ -54,6 +61,24 @@ public class ViewBobbing : MonoBehaviour
     {
         IsGrounded = controller.isGrounded;
 
+        Vector3 rayOrigin = player.transform.position;
+        Vector3 rayDirection = Vector3.down;
+
+
+        RaycastHit hitInfo;
+
+        if (Physics.Raycast(rayOrigin, rayDirection, out hitInfo, 10f))
+        {
+            if (hitInfo.collider.tag == "Metal")
+            {
+                Material = "Metal";
+            }
+            else
+            {
+                Material = "other";
+
+            }
+        }
 
     }
     void FixedUpdate()
@@ -71,15 +96,39 @@ public class ViewBobbing : MonoBehaviour
 
         if (InputVector.magnitude > 0f && IsGrounded)
         {
-            Footstep.volume = Mathf.Lerp(Footstep.volume, 1f, 0.5f);
-            if (Motor.sprinting)
+            if (Material == "Metal")
             {
-                Footstep.pitch = Mathf.Lerp(Footstep.pitch, 1.5f, 0.5f);
+                MetalSteps.volume = Mathf.Lerp(MetalSteps.volume, 1f, 0.5f);
+                if (Motor.sprinting)
+                {
+                    MetalSteps.pitch = Mathf.Lerp(MetalSteps.pitch, 1.5f, 0.5f);
+                    ConcreteSteps.volume = Mathf.Lerp(ConcreteSteps.volume, 0f, 0.5f);
+
+                }
+                else
+                {
+                    MetalSteps.pitch = Mathf.Lerp(MetalSteps.pitch, 1f, 0.5f);
+                    ConcreteSteps.volume = Mathf.Lerp(ConcreteSteps.volume, 0f, 0.5f);
+
+                }
             }
             else
             {
-                Footstep.pitch = Mathf.Lerp(Footstep.pitch, 1f, 0.5f);
+                ConcreteSteps.volume = Mathf.Lerp(ConcreteSteps.volume, 1f, 0.5f);
+                if (Motor.sprinting)
+                {
+                    ConcreteSteps.pitch = Mathf.Lerp(ConcreteSteps.pitch, 1.5f, 0.5f);
+                    MetalSteps.volume = Mathf.Lerp(MetalSteps.volume, 0f, 0.5f);
+
+                }
+                else
+                {
+                    ConcreteSteps.pitch = Mathf.Lerp(ConcreteSteps.pitch, 1f, 0.5f);
+                    MetalSteps.volume = Mathf.Lerp(MetalSteps.volume, 0f, 0.5f);
+
+                }
             }
+          
 
 
             sintime += Time.deltaTime + EffectSpeed2;
@@ -100,7 +149,19 @@ public class ViewBobbing : MonoBehaviour
         }
         else
         {
-            Footstep.volume = Mathf.Lerp(Footstep.volume, 0f, 0.5f);
+            if (Material == "Metal")
+            {
+                MetalSteps.volume = Mathf.Lerp(MetalSteps.volume, 0f, 0.5f);
+                ConcreteSteps.volume = Mathf.Lerp(ConcreteSteps.volume, 0f, 0.5f);
+
+            }
+            else
+            {
+                ConcreteSteps.volume = Mathf.Lerp(ConcreteSteps.volume, 0f, 0.5f);
+                MetalSteps.volume = Mathf.Lerp(MetalSteps.volume, 0f, 0.5f);
+
+            }
+
             lerper();
         }
 
