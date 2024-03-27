@@ -101,13 +101,13 @@ public class ViewBobbing : MonoBehaviour
                 MetalSteps.volume = Mathf.Lerp(MetalSteps.volume, 1f, 0.5f);
                 if (Motor.sprinting)
                 {
-                    MetalSteps.pitch = Mathf.Lerp(MetalSteps.pitch, 1.5f, 0.5f);
+                    MetalSteps.pitch = Mathf.Lerp(MetalSteps.pitch, 1.7f, 0.5f);
                     ConcreteSteps.volume = Mathf.Lerp(ConcreteSteps.volume, 0f, 0.5f);
 
                 }
                 else
                 {
-                    MetalSteps.pitch = Mathf.Lerp(MetalSteps.pitch, 1f, 0.5f);
+                    MetalSteps.pitch = Mathf.Lerp(MetalSteps.pitch, 1.2f, 0.5f);
                     ConcreteSteps.volume = Mathf.Lerp(ConcreteSteps.volume, 0f, 0.5f);
 
                 }
@@ -117,13 +117,13 @@ public class ViewBobbing : MonoBehaviour
                 ConcreteSteps.volume = Mathf.Lerp(ConcreteSteps.volume, 1f, 0.5f);
                 if (Motor.sprinting)
                 {
-                    ConcreteSteps.pitch = Mathf.Lerp(ConcreteSteps.pitch, 1.5f, 0.5f);
+                    ConcreteSteps.pitch = Mathf.Lerp(ConcreteSteps.pitch, 1.25f, 0.5f);
                     MetalSteps.volume = Mathf.Lerp(MetalSteps.volume, 0f, 0.5f);
 
                 }
                 else
                 {
-                    ConcreteSteps.pitch = Mathf.Lerp(ConcreteSteps.pitch, 1f, 0.5f);
+                    ConcreteSteps.pitch = Mathf.Lerp(ConcreteSteps.pitch, 0.75f, 0.5f);
                     MetalSteps.volume = Mathf.Lerp(MetalSteps.volume, 0f, 0.5f);
 
                 }
