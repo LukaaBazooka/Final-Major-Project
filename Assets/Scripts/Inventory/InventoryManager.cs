@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
+using JetBrains.Annotations;
+using System.Runtime.CompilerServices;
 //using static UnityEditor.PlayerSettings;
 
 public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
@@ -37,12 +40,13 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
 
     int SelectedHotbarSlot = 0;
-
+    private bool beinglookedat = false;
     void Start()
     {
         HotBarItemChange();
         Cursor.lockState = CursorLockMode.Locked;
     }
+ 
 
     void Update()
     {
@@ -59,7 +63,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         if (Input.GetKeyDown(KeyCode.Tab))
         {
 
-            if (IsInventoryOpeened)
+            if (IsInventoryOpeened && hotbarslots[SelectedHotbarSlot].GetComponent<InventorySlots>().heldItem)
             {
                 Reticle.SetActive(true);
                 AudioSource.PlayClipAtPoint(Close, Player.transform.position, 0.3f);
@@ -79,6 +83,44 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
             }
         }
+        Mouse mouse = Mouse.current;
+
+        if (mouse.leftButton.wasPressedThisFrame)
+        {
+            if (!IsInventoryOpeened)
+            {
+                for (int i = 0; i < HandParent.childCount; i++)
+                {
+                    if (HandParent.GetChild(i).GetComponent<ItemHand>().ItemScriptableObject == hotbarslots[SelectedHotbarSlot].GetComponent<InventorySlots>().heldItem.GetComponent<InventoryItem>().ItemScriptableObject)
+                    {
+                        if (HandParent.GetChild(i).gameObject.transform.Find("IsFile"))
+                        {
+                            if (!beinglookedat)
+                            {
+                                beinglookedat = true;
+                                LeanTween.moveLocal(HandParent.GetChild(i).gameObject, new Vector3(-0.004998842f, 0.0390000391f, 0.716296446f),1f).setEaseInOutQuad();
+                                LeanTween.rotateLocal(HandParent.GetChild(i).gameObject, new Vector3(0, 0, 0), 1f).setEaseInOutQuad();
+                                //HandParent.GetChild(i).gameObject.transform.localPosition = Vector3.Lerp(HandParent.GetChild(i).gameObject.transform.localPosition, new Vector3(-0.004998842f, 0.0390000391f, 0.716296446f), 3f);
+                                //HandParent.GetChild(i).gameObject.transform.localRotation = Quaternion.Lerp(HandParent.GetChild(i).gameObject.transform.rotation, new Quaternion(0, 0, 0, 1), 3f);
+                            }
+                            else
+                            {
+                                LeanTween.moveLocal(HandParent.GetChild(i).gameObject, new Vector3(0.481999993f, -0.397000015f, 0.683000028f), 1f).setEaseInOutQuad();
+                                LeanTween.rotateLocal(HandParent.GetChild(i).gameObject, new Vector3(20.3688984f, 15.7115564f, 338.704407f), 1f).setEaseInOutQuad();
+
+                               
+
+                                beinglookedat = false;
+                            }
+                        }
+
+                    }
+
+                }                        
+
+            }
+        }
+
     }
 
 
@@ -130,6 +172,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                         if (HandParent.GetChild(i).GetComponent<ItemHand>().ItemScriptableObject == hotbarslots[SelectedHotbarSlot].GetComponent<InventorySlots>().heldItem.GetComponent<InventoryItem>().ItemScriptableObject)
                         {
                             HandParent.GetChild(i).gameObject.SetActive(true);
+                            //Debug.Log(HandParent.GetChild(i).gameObject);
                         }
 
                     }
@@ -168,6 +211,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 lastItemSlot = clickedObject.transform.parent.GetComponent<GameObject>();
             }
         }
+
+     
     }
 
     public void OnPointerUp(PointerEventData eventData) 
@@ -180,6 +225,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             if (slot != null && slot.heldItem == null )
             {
                 slot.SetHeldItem(draggedObject);
+                Debug.Log(draggedObject);
                 draggedObject.transform.parent = slot.transform;
                 AudioSource.PlayClipAtPoint(Place, Player.transform.position, 0.1f);
 
