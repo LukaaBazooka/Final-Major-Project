@@ -227,7 +227,7 @@ public class PlayerMotor : MonoBehaviour
         if (inAir) 
         {
             inAir = false;
-            AudioSource.PlayClipAtPoint(LandSound, OutOfBreath.transform.position, 0.2f);
+            AudioSource.PlayClipAtPoint(LandSound, OutOfBreath.transform.position, 0.1f);
 
         }
     }
@@ -240,7 +240,7 @@ public class PlayerMotor : MonoBehaviour
         {
             
             Playervelocity.y = Mathf.Sqrt(JumpHeight * -3.0f * gravity);
-            AudioSource.PlayClipAtPoint(JumpSound, OutOfBreath.transform.position, 1f);
+            AudioSource.PlayClipAtPoint(JumpSound, OutOfBreath.transform.position, 0.2f);
             inAir = true;
             StartCoroutine(AirThing());
 
