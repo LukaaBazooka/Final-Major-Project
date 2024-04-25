@@ -12,7 +12,8 @@ public class MenuButtonManager : MonoBehaviour
     public GameObject Canvas;
     public AudioSource Sound;
     public GameObject Glow;
-
+    public GameObject Options;
+    private bool loaded = false;
     public void Start()
     {
         Debug.Log("Loaded??");
@@ -32,6 +33,21 @@ public class MenuButtonManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene("MainScene");
     }
+
+    public void optionIn()
+    {   
+        if (!loaded)
+        {
+            LeanTween.moveLocal(Options, new Vector3(146, -31, 0), 1f).setEaseInOutCubic();
+            loaded = true;
+        }
+        else
+        {
+            LeanTween.moveLocal(Options, new Vector3(648, -31, 0), 1f).setEaseInOutCubic();
+            loaded = false;
+        }
+    }
+ 
     public void LoadMainScene()
     {
         StartCoroutine(LOAD2());

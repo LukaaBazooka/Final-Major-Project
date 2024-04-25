@@ -62,9 +62,10 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-
-            if (IsInventoryOpeened && hotbarslots[SelectedHotbarSlot].GetComponent<InventorySlots>().heldItem)
+            //&& hotbarslots[SelectedHotbarSlot].GetComponent<InventorySlots>().heldItem
+            if (IsInventoryOpeened )
             {
+                
                 Reticle.SetActive(true);
                 AudioSource.PlayClipAtPoint(Close, Player.transform.position, 0.3f);
 

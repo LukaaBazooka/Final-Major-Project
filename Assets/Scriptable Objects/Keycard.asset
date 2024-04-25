@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Keycard
   icon: {fileID: 21300000, guid: 05007807c7b08c4438eef5f90735018a, type: 3}
-  prefab: {fileID: 4705029204025938506, guid: 9e8fe548af3eea94f9f09ed6f80d4ecd, type: 3}
+  prefab: {fileID: 3664474673029013706, guid: 249815edb41dfa74987ab1d8153cbd64, type: 3}
   stackMax: 0
