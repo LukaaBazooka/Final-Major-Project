@@ -15872,7 +15872,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1636188417
 Transform:
   m_ObjectHideFlags: 0
@@ -21928,6 +21928,7 @@ MonoBehaviour:
   Sound: {fileID: 733183251}
   Glow: {fileID: 128000268}
   Options: {fileID: 488382147}
+  music: {fileID: 1383995283}
 --- !u!4 &1943998413
 Transform:
   m_ObjectHideFlags: 0

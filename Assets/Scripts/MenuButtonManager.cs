@@ -14,6 +14,7 @@ public class MenuButtonManager : MonoBehaviour
     public GameObject Glow;
     public GameObject Options;
     private bool loaded = false;
+    public AudioSource music;
     public void Start()
     {
         Debug.Log("Loaded??");
@@ -29,9 +30,10 @@ public class MenuButtonManager : MonoBehaviour
 
 
         LeanTween.alpha(Panel.rectTransform, 1f, 2f).setEaseInOutQuad();
+        music.volume = Mathf.Lerp(music.volume, 0f, 2f);
 
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene("MainScene");
+        SceneManager.LoadScene("IntroScene");
     }
 
     public void optionIn()

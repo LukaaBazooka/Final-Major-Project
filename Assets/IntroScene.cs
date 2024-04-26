@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class IntroScene : MonoBehaviour
@@ -24,7 +25,14 @@ public class IntroScene : MonoBehaviour
         m_AudioSource.Play();
         yield return new WaitForSeconds(1f);
         LeanTween.alpha(Panel.rectTransform, 0f, 2f).setEaseInOutQuad();
-        yield return new WaitForSeconds(8.5f);
+        yield return new WaitForSeconds(7.5f);
         SecondSource.Play();
+
+        yield return new WaitForSeconds(17f);
+        LeanTween.alpha(Panel.rectTransform, 1f, 0f).setEaseInOutQuad();
+
+        yield return new WaitForSeconds(6f);
+        SceneManager.LoadScene("MainScene");
+
     }
 }
