@@ -7,6 +7,9 @@ using Unity.VisualScripting;
 using UnityEngine.InputSystem;
 using JetBrains.Annotations;
 using System.Runtime.CompilerServices;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 //using static UnityEditor.PlayerSettings;
 
 public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
@@ -31,18 +34,31 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
 
     [SerializeField] GameObject Reticle;
+    [SerializeField] GameObject PauseMenu;
+    [SerializeField] GameObject Objecthing;
+
+    [SerializeField] Image Vignette;
+    [SerializeField] Volume VOLUME;
+    [SerializeField] DepthOfField Depth;
+    [SerializeField] GameObject DropThing;
 
     GameObject draggedObject;
     GameObject lastItemSlot;
 
     public GameObject Player;
     bool IsInventoryOpeened;
+    public bool IsPaused;
+
+
+    [SerializeField] AudioSource MAIN_AUDIO_SOURCE;
+
 
 
     int SelectedHotbarSlot = 0;
     private bool beinglookedat = false;
     void Start()
     {
+        VOLUME.profile.TryGet(out Depth);
         HotBarItemChange();
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -60,14 +76,51 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             draggedObject.transform.position = Input.mousePosition;
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (IsPaused)
+            {
+                Reticle.SetActive(true);
+                DropThing.SetActive(true);
+
+                Cursor.lockState = CursorLockMode.Locked;
+
+                IsPaused = false;
+                Depth.active = false;
+
+                LeanTween.alpha(Vignette.rectTransform, 0f, 0.5f).setEaseInOutQuad();
+
+                LeanTween.moveLocal(Objecthing, new Vector3(0, 1000, 0), 1f).setEaseInOutCubic();
+
+            }
+            else
+            {
+
+                Reticle.SetActive(false);
+                DropThing.SetActive(false);
+
+                Cursor.lockState = CursorLockMode.None;
+
+                IsPaused = true;
+                Depth.active = true;
+
+                LeanTween.alpha(Vignette.rectTransform, 1f, 0.5f).setEaseInOutQuad();
+
+                LeanTween.moveLocal(Objecthing, new Vector3(0,20, 0), 1f).setEaseInOutCubic();
+
+            }
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Tab) && !IsPaused)
         {
             //&& hotbarslots[SelectedHotbarSlot].GetComponent<InventorySlots>().heldItem
-            if (IsInventoryOpeened )
+            if (IsInventoryOpeened)
             {
                 
                 Reticle.SetActive(true);
-                AudioSource.PlayClipAtPoint(Close, Player.transform.position, 0.3f);
+                MAIN_AUDIO_SOURCE.clip = Close;
+                MAIN_AUDIO_SOURCE.Play();
 
                 Cursor.lockState = CursorLockMode.Locked;   
                 
@@ -76,8 +129,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             else
             {
                 Reticle.SetActive(false);
-                AudioSource.PlayClipAtPoint(Open, Player.transform.position, 0.3f);
-
+                MAIN_AUDIO_SOURCE.clip = Open;
+                MAIN_AUDIO_SOURCE.Play();
                 Cursor.lockState = CursorLockMode.None;
 
                 IsInventoryOpeened = true;
@@ -206,8 +259,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
 
                 draggedObject = slot.heldItem;
-                AudioSource.PlayClipAtPoint(Grab, Player.transform.position, 1f);
-
+                MAIN_AUDIO_SOURCE.clip = Grab;
+                MAIN_AUDIO_SOURCE.Play();
                 slot.heldItem = null;
                 lastItemSlot = clickedObject.transform.parent.GetComponent<GameObject>();
             }
@@ -228,8 +281,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 slot.SetHeldItem(draggedObject);
                 Debug.Log(draggedObject);
                 draggedObject.transform.parent = slot.transform;
-                AudioSource.PlayClipAtPoint(Place, Player.transform.position, 0.1f);
-
+                MAIN_AUDIO_SOURCE.clip = Place;
+                MAIN_AUDIO_SOURCE.Play();
 
             }
             else if (slot != null && slot.heldItem != null)
@@ -250,8 +303,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 GameObject Newitem = Instantiate(draggedObject.GetComponent<InventoryItem>().ItemScriptableObject.prefab, position, new Quaternion());
                 Newitem.GetComponent<ItemPickable>().ItemScriptableObject = draggedObject.GetComponent<InventoryItem>().ItemScriptableObject;
 
-                AudioSource.PlayClipAtPoint(Drop, Player.transform.position, 0.5f);
-
+                MAIN_AUDIO_SOURCE.clip = Drop;
+                MAIN_AUDIO_SOURCE.Play();
                 Destroy(draggedObject);
 
                 lastItemSlot.GetComponent<InventorySlots>().heldItem = null;
@@ -288,8 +341,8 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             NewItem.GetComponent<InventoryItem>().ItemScriptableObject = PickedItem.GetComponent<ItemPickable>().ItemScriptableObject;
             NewItem.transform.SetParent(emptyslot.transform);
             NewItem.transform.localPosition= new Vector3(0, 0, 0);
-            AudioSource.PlayClipAtPoint(Take, PickedItem.transform.position, 0.6f);
-
+            MAIN_AUDIO_SOURCE.clip = Take;
+            MAIN_AUDIO_SOURCE.Play();
             emptyslot.GetComponent<InventorySlots>().heldItem= NewItem;
 
 

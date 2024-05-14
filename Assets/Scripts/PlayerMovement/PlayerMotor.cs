@@ -8,6 +8,7 @@ public class PlayerMotor : MonoBehaviour
 {
 
     private CharacterController controller;
+    private InventoryManager inventoryManager;
     private Vector3 Playervelocity;
     private bool IsGrounded;
     public float speed = 3.5f;
@@ -18,10 +19,13 @@ public class PlayerMotor : MonoBehaviour
     private float crouchTimer;
     public bool sprinting = false;
 
-    public AudioSource OutOfBreath;
+    public AudioClip OutOfBreath;
 
     public AudioClip JumpSound;
     public AudioClip LandSound;
+
+    [SerializeField] AudioSource MAIN_AUDIO_SOURCE;
+
 
     public Image StamBar;
 
@@ -45,7 +49,8 @@ public class PlayerMotor : MonoBehaviour
         if (!outbreathe)
         {
             outbreathe = true;
-            OutOfBreath.Play();
+            MAIN_AUDIO_SOURCE.clip = OutOfBreath;
+            MAIN_AUDIO_SOURCE.Play();
             yield return new WaitForSeconds(3f);
             outbreathe = false;
         }
@@ -215,6 +220,8 @@ public class PlayerMotor : MonoBehaviour
 
         controller.Move(Playervelocity * Time.deltaTime);
 
+
+
     }
     IEnumerator AirThing()
     {
@@ -227,8 +234,8 @@ public class PlayerMotor : MonoBehaviour
         if (inAir) 
         {
             inAir = false;
-            AudioSource.PlayClipAtPoint(LandSound, OutOfBreath.transform.position, 0.1f);
-
+            MAIN_AUDIO_SOURCE.clip = LandSound;
+            MAIN_AUDIO_SOURCE.Play();
         }
     }
 
@@ -240,7 +247,8 @@ public class PlayerMotor : MonoBehaviour
         {
             
             Playervelocity.y = Mathf.Sqrt(JumpHeight * -3.0f * gravity);
-            AudioSource.PlayClipAtPoint(JumpSound, OutOfBreath.transform.position, 0.2f);
+            MAIN_AUDIO_SOURCE.clip = JumpSound;
+            MAIN_AUDIO_SOURCE.Play();
             inAir = true;
             StartCoroutine(AirThing());
 

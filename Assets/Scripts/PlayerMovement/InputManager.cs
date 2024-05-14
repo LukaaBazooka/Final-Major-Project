@@ -18,6 +18,8 @@ public class InputManager : MonoBehaviour
 
 
     bool IsInventoryOpeened;
+    bool IsPassued;
+
     void Update()
     {
             
@@ -36,8 +38,20 @@ public class InputManager : MonoBehaviour
 
             }
         }
-   
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (IsPassued)
+            {
+                IsPassued = false;
+            }
+            else
+            {
+
+                IsPassued = true;
+
+            }
+        }
     }
 
 
@@ -61,12 +75,16 @@ public class InputManager : MonoBehaviour
     void FixedUpdate()
     {
         //tell the playermotor to move using the valye from our movement action
-        motor.ProcessMove(OnFoot.Movement.ReadValue<Vector2>());
+        if (!IsPassued)
+        {
+            motor.ProcessMove(OnFoot.Movement.ReadValue<Vector2>());
+
+        }
     }
 
     private void LateUpdate()
     {
-        if (!IsInventoryOpeened)
+        if (!IsInventoryOpeened && !IsPassued)
         {
             look.ProcessLook(OnFoot.Look.ReadValue<Vector2>());
         }
