@@ -7,6 +7,8 @@ public class CardReader : MonoBehaviour
     // Start is called before the first frame update
 
     public bool scancooldown;
+    public float KeyCardLevel;
+    public bool NeedsCard;
 
     public IEnumerator coooldown(float waittime)
     {

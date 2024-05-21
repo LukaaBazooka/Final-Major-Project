@@ -77,36 +77,81 @@ public class PlayerLook : MonoBehaviour
                 {
 
                     CardReader cardreader = Object.GetComponent<CardReader>();
-
-                    if (KeyCard.activeSelf == true && !cardreader.scancooldown)
+                    if (cardreader.NeedsCard)
                     {
-                        //Debug.Log("oh nice one.");
-                        cardreader.scancooldown = true;
-
-                        StartCoroutine(cardreader.coooldown(10f));
-                        AudioSource.PlayClipAtPoint(AcceptCard, Object.transform.position, 2f);
-
-
-                        StartCoroutine(cardreader.Colorswitch(Object,true));
-
-
-                        anim = Object.transform.parent.gameObject.GetComponent<Animator>();
-
-                        if (Object.transform.parent.gameObject.GetComponent<DoorThng>())
+                        if (KeyCard.activeSelf == true && !cardreader.scancooldown)
                         {
-                            DoorThng door = Object.transform.parent.gameObject.GetComponent<DoorThng>();
-                            StartCoroutine(door.Animthingy());
+                            //Debug.Log("oh nice one.");
+
+
+
+                            cardreader.scancooldown = true;
+
+                            StartCoroutine(cardreader.coooldown(10f));
+                            AudioSource.PlayClipAtPoint(AcceptCard, Object.transform.position, 2f);
+
+
+                            StartCoroutine(cardreader.Colorswitch(Object, true));
+
+
+                            anim = Object.transform.parent.gameObject.GetComponent<Animator>();
+
+                            if (Object.transform.parent.gameObject.GetComponent<DoorThng>())
+                            {
+                                DoorThng door = Object.transform.parent.gameObject.GetComponent<DoorThng>();
+                                StartCoroutine(door.Animthingy());
+                            }
+
                         }
+                        else if (!KeyCard.activeSelf && !cardreader.scancooldown || !cardreader.scancooldown)
+                        {
+                            cardreader.scancooldown = true;
+
+                            StartCoroutine(cardreader.coooldown(2f));
+
+                            AudioSource.PlayClipAtPoint(DeclineCard, Object.transform.position, 2f);
+                            StartCoroutine(cardreader.Colorswitch(Object, false));
+
+                        }
+                   
                       
                     }
-                    else if (!KeyCard.activeSelf && !cardreader.scancooldown || !cardreader.scancooldown) 
+                    else if (!cardreader.NeedsCard)
                     {
-                        cardreader.scancooldown = true;
+                        if (!cardreader.scancooldown)
+                        {
+                            //Debug.Log("oh nice one.");
 
-                        StartCoroutine(cardreader.coooldown(2f));
 
-                        AudioSource.PlayClipAtPoint(DeclineCard, Object.transform.position, 2f);
-                        StartCoroutine(cardreader.Colorswitch(Object, false));
+
+                            cardreader.scancooldown = true;
+
+                            StartCoroutine(cardreader.coooldown(10f));
+                            AudioSource.PlayClipAtPoint(AcceptCard, Object.transform.position, 2f);
+
+
+                            StartCoroutine(cardreader.Colorswitch(Object, true));
+
+
+                            anim = Object.transform.parent.gameObject.GetComponent<Animator>();
+
+                            if (Object.transform.parent.gameObject.GetComponent<DoorThng>())
+                            {
+                                DoorThng door = Object.transform.parent.gameObject.GetComponent<DoorThng>();
+                                StartCoroutine(door.Animthingy());
+                            }
+
+                        }
+                        else if (!cardreader.scancooldown || !cardreader.scancooldown)
+                        {
+                            cardreader.scancooldown = true;
+
+                            StartCoroutine(cardreader.coooldown(2f));
+
+                            AudioSource.PlayClipAtPoint(DeclineCard, Object.transform.position, 2f);
+                            StartCoroutine(cardreader.Colorswitch(Object, false));
+
+                        }
 
                     }
                 }
