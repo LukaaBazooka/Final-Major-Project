@@ -51,7 +51,7 @@ public class IntroScene : MonoBehaviour
         yield return new WaitForSeconds(17f);
         LeanTween.alpha(Panel.rectTransform, 1f, 0f).setEaseInOutQuad();
 
-        yield return new WaitForSeconds(6f);
+        yield return new WaitForSeconds(10f);
         SceneManager.LoadScene("MainScene");
 
     }

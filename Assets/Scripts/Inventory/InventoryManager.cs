@@ -86,7 +86,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 Cursor.lockState = CursorLockMode.Locked;
 
                 IsPaused = false;
-                Depth.active = false;
+                Depth.active = transform;
 
                 LeanTween.alpha(Vignette.rectTransform, 0f, 0.5f).setEaseInOutQuad();
 
@@ -102,7 +102,7 @@ public class InventoryManager : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 Cursor.lockState = CursorLockMode.None;
 
                 IsPaused = true;
-                Depth.active = true;
+                Depth.active = false;
 
                 LeanTween.alpha(Vignette.rectTransform, 1f, 0.5f).setEaseInOutQuad();
 
