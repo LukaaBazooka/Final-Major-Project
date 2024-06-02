@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -15,7 +16,7 @@ public class IntroThing : MonoBehaviour
     public PlayerMotor PlayerMotor;
     public PlayerLook playerLook;
     public Animator animator;
-
+    public GameObject Cam;
     [SerializeField] Volume VOLUME;
 
     [SerializeField] DepthOfField Depth;
@@ -48,7 +49,7 @@ public class IntroThing : MonoBehaviour
 
         Panel.enabled = false;
 
-     
+        Cam.transform.localPosition = new Vector3(0, 0.6000000004f, 0);
 
     }
 }
